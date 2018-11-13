@@ -26,10 +26,20 @@ let encryptUsingFABRIC_KEY = data => {
     });
 };
 
+let encrypt_TreatmentDetails_UsingFABRIC_KEY = data => {
+    return new Promise((resolve, reject) => {
+        encryptObject(data, FABRIC_KEY).then(res => {
+            // console.log(res);
+            resolve(res);
+        });
+    });
+};
+
 // encryptUsingFABRIC_KEY(data).then(res => {
 //     console.log(res);
 // })
 
 module.exports = {
-    encryptUsingFABRIC_KEY //it encrypts the given data by AES 256 bit algo. Fabric Key 
+    encryptUsingFABRIC_KEY, //it encrypts the given data by AES 256 bit algo. Fabric Key 
+    encrypt_TreatmentDetails_UsingFABRIC_KEY
 }
