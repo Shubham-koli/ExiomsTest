@@ -143,6 +143,48 @@ app.post("/newtreatment", (req, response) => {
         });
 });
 
+app.post("/treatment", (req, response) => {
+    console.log(req.body);
+    let PatientId = req.body.PatientId;
+    let Hospital_ID = req.body.Hospital_ID;
+
+    getPatientData(PatientId)
+        .then(
+            result => {
+                console.log("Fetching Data from Blockchain");
+                decrypt_TreatmentDetails_UsingFabricKey(result).then(result1 => {
+                    console.log("decrypted using Fabric Key");
+                    async function getData(result1) {
+                        let data = [];
+                        result1.TreatmentDetails.forEach(record => {
+                            processData(record, req.body.Hospital_ID)
+                                .then(details => {
+                                    data.push(details);
+                                    if (result1.TreatmentDetails.length == data.length) {
+                                        response.send(data);
+                                    }
+                                })
+                                .catch(err => {
+                                    console.log(err);
+                                    response.send(err);
+                                });
+                        });
+                    }
+                    getData(result1);
+                });
+            },
+            errorMessage => {
+                console.log(errorMessage);
+                response.sendStatus(404);
+            }
+        )
+        .catch(errorMessage => {
+            console.log(errorMessage);
+            response.sendStatus(404);
+        });
+
+});
+
 
 app.listen(4000, () => {
     console.log("Started on port 4000");
