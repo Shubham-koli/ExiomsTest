@@ -21,8 +21,7 @@ let decryptObject = (data, CIPHER_KEY) => {
   return new Promise((resolve, reject) => {
     for (let key in data) {
       if (data.hasOwnProperty(key)) {
-        if (key == "$class" || key == "PatientId" || key == "EHR_ID") {
-        } else {
+        if (key == "$class" || key == "PatientId" || key == "EHR_ID") {} else {
           let val = data[key];
           decrypt_promise(val, CIPHER_KEY).then(
             res => {
