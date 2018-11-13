@@ -23,13 +23,14 @@ const {
 
 // module to Encrypt data
 const {
-    encryptUsingFABRIC_KEY
+    encryptUsingFABRIC_KEY,
+    encrypt_TreatmentDetails_UsingFABRIC_KEY
 } = require("./EHR/encryption/Fabric-Encrypt");
 
 // module to decrypt data
 const {
     decryptUsingFABRIC_KEY,
-    decrypt_TreatmentDetails_UsingFabricKe
+    decrypt_TreatmentDetails_UsingFabricKey
 } = require("./EHR/decryption/Fabric-Decrypt");
 
 const {
@@ -86,8 +87,8 @@ app.post("/getpatient", (req, res) => {
 app.post("/patienthistory", (req, response) => {
     console.log("request to view patient treatment history recieved");
     console.log(req.body);
-    let AdharNo = req.body.PatientId;
-    getPatientHistory(AdharNo)
+    let PatientId = req.body.PatientId;
+    getPatientHistory(PatientId)
         .then(
             doc => {
                 doc.status = "200";
@@ -102,6 +103,42 @@ app.post("/patienthistory", (req, response) => {
         .catch(error => {
             response.send({
                 status: "500"
+            });
+        });
+});
+
+app.post("/newtreatment", (req, response) => {
+    req.body.$class = "org.eximos.empty.TreatmentDetails";
+    console.log(req.body);
+    let PatientId = req.body.patientData.substr(38);
+    console.log(PatientId);
+    let Hospital_ID = req.body.HospitalName;
+    encrypt_TreatmentDetails_UsingFABRIC_KEY(req.body).then(result => {
+            console.log("encrypting using Fabric key");
+            result.$class = "org.exioms.empty.TreatmentDetails";
+            addTreatmentDetails(result)
+                .then(
+                    res => {
+                        console.log(res);
+                        console.log(result);
+                        response.send({
+                            status: "200"
+                        });
+                    },
+                    errorMessage => {
+                        console.log(errorMessage);
+                        response.sendStatus(500);
+                    }
+                )
+                .catch(errorMessage => {
+                    console.log(errorMessage);
+                });
+            console.log(result);
+        })
+
+        .catch(err => {
+            response.sendStatus({
+                status: "401"
             });
         });
 });
