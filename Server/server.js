@@ -40,6 +40,14 @@ const {
     getPatientHistory
 } = require("./routes/getPatient");
 
+// Modules for Consent Mechanism
+const {
+    accessGRANT,
+    accessReq,
+    accessDENY,
+    checkAccess
+} = require("./EHR/MongoDB/Consent");
+
 
 var app = express();
 app.use(bodyParser.json());
@@ -71,17 +79,26 @@ app.post("/getpatient", (req, res) => {
     let PatientId = req.body.PatientId;
     let Hospital_ID = req.body.Hospital_ID;
     console.log(PatientId);
-    getPatient(PatientId)
-        .then(result => {
-            console.log("decrypt using Fabric Key");
-            decryptUsingFABRIC_KEY(result).then(decryptedObj => {
-                decryptedObj.status = "200";
-                res.send(decryptedObj);
-            });
-        })
-        .catch(err => {
-            console.log(err);
-        });
+    checkAccess(PatientId, Hospital_ID).then(code => {
+        if (code == '200') {
+            getPatient(PatientId)
+                .then(result => {
+                    console.log("decrypt using Fabric Key");
+                    decryptUsingFABRIC_KEY(result).then(decryptedObj => {
+                        decryptedObj.status = "200";
+                        res.send(decryptedObj);
+                    });
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        } else {
+            res.sendStatus(401);
+        }
+    }).catch(err => {
+        console.log(err);
+        res.sendStatus(401);
+    })
 });
 
 app.post("/patienthistory", (req, response) => {
@@ -113,76 +130,91 @@ app.post("/newtreatment", (req, response) => {
     let PatientId = req.body.patientData.substr(38);
     console.log(PatientId);
     let Hospital_ID = req.body.HospitalName;
-    encrypt_TreatmentDetails_UsingFABRIC_KEY(req.body).then(result => {
-            console.log("encrypting using Fabric key");
-            result.$class = "org.exioms.empty.TreatmentDetails";
-            addTreatmentDetails(result)
-                .then(
-                    res => {
-                        console.log(res);
-                        console.log(result);
-                        response.send({
-                            status: "200"
+    checkAccess(PatientId, Hospital_ID).then(code => {
+        if (code == '200') {
+            encrypt_TreatmentDetails_UsingFABRIC_KEY(req.body).then(result => {
+                    console.log("encrypting using Fabric key");
+                    result.$class = "org.exioms.empty.TreatmentDetails";
+                    addTreatmentDetails(result)
+                        .then(
+                            res => {
+                                console.log(res);
+                                console.log(result);
+                                response.send({
+                                    status: "200"
+                                });
+                            },
+                            errorMessage => {
+                                console.log(errorMessage);
+                                response.sendStatus(500);
+                            }
+                        )
+                        .catch(errorMessage => {
+                            console.log(errorMessage);
                         });
-                    },
-                    errorMessage => {
-                        console.log(errorMessage);
-                        response.sendStatus(500);
-                    }
-                )
-                .catch(errorMessage => {
-                    console.log(errorMessage);
+                    console.log(result);
+                })
+                .catch(err => {
+                    response.sendStatus({
+                        status: "401"
+                    });
                 });
-            console.log(result);
-        })
-
-        .catch(err => {
-            response.sendStatus({
-                status: "401"
-            });
-        });
+        } else {
+            response.sendStatus(401);
+        }
+    }).catch(err => {
+        console.log('Un-authorized');
+        response.sendStatus(401);
+    })
 });
 
 app.post("/treatment", (req, response) => {
     console.log(req.body);
     let PatientId = req.body.PatientId;
     let Hospital_ID = req.body.Hospital_ID;
-
-    getPatientData(PatientId)
-        .then(
-            result => {
-                console.log("Fetching Data from Blockchain");
-                decrypt_TreatmentDetails_UsingFabricKey(result).then(result1 => {
-                    console.log("decrypted using Fabric Key");
-                    async function getData(result1) {
-                        let data = [];
-                        result1.TreatmentDetails.forEach(record => {
-                            processData(record, req.body.Hospital_ID)
-                                .then(details => {
-                                    data.push(details);
-                                    if (result1.TreatmentDetails.length == data.length) {
-                                        response.send(data);
-                                    }
-                                })
-                                .catch(err => {
-                                    console.log(err);
-                                    response.send(err);
+    checkAccess(PatientId, Hospital_ID).then(code => {
+        if (code == '200') {
+            getPatientData(PatientId)
+                .then(
+                    result => {
+                        console.log("Fetching Data from Blockchain");
+                        decrypt_TreatmentDetails_UsingFabricKey(result).then(result1 => {
+                            console.log("decrypted using Fabric Key");
+                            async function getData(result1) {
+                                let data = [];
+                                result1.TreatmentDetails.forEach(record => {
+                                    processData(record, req.body.Hospital_ID)
+                                        .then(details => {
+                                            data.push(details);
+                                            if (result1.TreatmentDetails.length == data.length) {
+                                                response.send(data);
+                                            }
+                                        })
+                                        .catch(err => {
+                                            console.log(err);
+                                            response.send(err);
+                                        });
                                 });
+                            }
+                            getData(result1);
                         });
+                    },
+                    errorMessage => {
+                        console.log(errorMessage);
+                        response.sendStatus(404);
                     }
-                    getData(result1);
+                )
+                .catch(errorMessage => {
+                    console.log(errorMessage);
+                    response.sendStatus(404);
                 });
-            },
-            errorMessage => {
-                console.log(errorMessage);
-                response.sendStatus(404);
-            }
-        )
-        .catch(errorMessage => {
-            console.log(errorMessage);
-            response.sendStatus(404);
-        });
-
+        } else {
+            console.log('Un-authorized');
+        }
+    }).catch(err => {
+        console.log(err);
+        response.sendStatus(401);
+    })
 });
 
 
