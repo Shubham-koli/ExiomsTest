@@ -42,18 +42,14 @@ let processData = (data, Hospital_ID) => {
     process(data);
     async function process(data) {
       let address = data.PinCode;
-      let details = await getHospitalName(Hospital_ID);
-      let HospitalName = details.name;
-      let HospitalId = Hospital_ID;
+      let HospitalId = data.Hospital_ID;
       let newDate = new Date(data.timestamp).toLocaleString();
       delete data.PinCode;
       delete data.$class;
       delete data.timestamp;
       data.Address = address;
-      data.HospitalName = HospitalName;
       data.HospitalId = HospitalId;
       data.Date = newDate.toString();
-      data.StaffName = details.StaffName;
       resolve(data);
     }
   });
