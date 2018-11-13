@@ -48,6 +48,10 @@ const {
     checkAccess
 } = require("./EHR/MongoDB/Consent");
 
+const {
+    getGrantPatients
+} = require("./EHR/MongoDB/getPatient");
+
 
 var app = express();
 app.use(bodyParser.json());
@@ -265,6 +269,27 @@ app.post("/request", (req, response) => {
                 CODE: `${errorMessage}`
             });
         });
+});
+
+app.post("/patientlist", (req, response) => {
+    // console.log(req.body);
+    console.log(`Getting Patient's List for Hospital ${req.body.Hospital_ID}`);
+    console.log(req.body); - [];
+    async function getPatientDetails(data, response) {
+        let patientDetails = [];
+        let PatientId = await getGrantPatients(data);
+        PatientId.forEach(id => {
+            let person = {};
+            person.pid = id.id;
+            patientDetails.push(person);
+            console.log(patientDetails);
+            if (patientDetails.length === PatientId.length) {
+                response.send(patientDetails);
+            }
+
+        });
+    }
+    getPatientDetails(req.body, response);
 });
 
 app.listen(4000, () => {
