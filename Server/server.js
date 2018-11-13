@@ -217,6 +217,30 @@ app.post("/treatment", (req, response) => {
     })
 });
 
+app.post("/grant", (req, response) => {
+    accessGRANT(req.body).then(res => {
+        if (doc == '200') {
+            console.log('Access Granted.');
+            req.sendStatus(200);
+        }
+    }).catch(err => {
+        console.log('Error granting the request');
+        req.sendStatus(500);
+    })
+})
+
+app.post("/deny", (req, response) => {
+    accessDENY(req.body).then(res => {
+        if (doc == '200') {
+            console.log('Access Denied.');
+            req.sendStatus(200);
+        }
+    }).catch(err => {
+        console.log('Error Denying the request');
+        req.sendStatus(500);
+    })
+})
+
 
 app.listen(4000, () => {
     console.log("Started on port 4000");

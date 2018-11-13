@@ -48,7 +48,7 @@ let accessGRANT = data => {
       .then(
         doc => {
           console.log(`Access For PatientID:- ${PatientId} successfully Granted.`);
-          resolve(doc);
+          resolve(200);
         },
         err => {
           console.log("Error while updating access request to MongoDB", err);
