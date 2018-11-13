@@ -18,5 +18,11 @@
   "bugs": {
     "url": "https://github.com/Shubham-koli/ExiomsTest/issues"
   },
-  "homepage": "https://github.com/Shubham-koli/ExiomsTest#readme"
+  "homepage": "https://github.com/Shubham-koli/ExiomsTest#readme",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "crypto-js": "^3.1.9-1",
+    "dotenv": "^6.1.0",
+    "express": "^4.16.4"
+  }
 }
