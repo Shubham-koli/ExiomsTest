@@ -6,23 +6,23 @@ function ExportToTable() {
   if (
     regex.test(
       $("#excelfile")
-        .val()
-        .toLowerCase()
+      .val()
+      .toLowerCase()
     )
   ) {
     var xlsxflag = false; /*Flag for checking whether excel is .xls format or .xlsx format*/
     if (
       $("#excelfile")
-        .val()
-        .toLowerCase()
-        .indexOf(".xlsx") > 0
+      .val()
+      .toLowerCase()
+      .indexOf(".xlsx") > 0
     ) {
       xlsxflag = true;
     }
     /*Checks whether the browser supports HTML5*/
     if (typeof FileReader != "undefined") {
       var reader = new FileReader();
-      reader.onload = function(e) {
+      reader.onload = function (e) {
         var data = e.target.result;
         /*Converts the excel data in to object*/
         if (xlsxflag) {
@@ -38,7 +38,7 @@ function ExportToTable() {
         var sheet_name_list = workbook.SheetNames;
 
         var cnt = 0; /*This is used for restricting the script to consider only first sheet of excel*/
-        sheet_name_list.forEach(function(y) {
+        sheet_name_list.forEach(function (y) {
           /*Iterate through all sheets*/
           /*Convert the cell value to Json*/
           if (xlsxflag) {
@@ -117,7 +117,7 @@ function upload(jsondataRow) {
   var xhr = new XMLHttpRequest();
   xhr.open("POST", URL, true);
   console.log("before onload");
-  xhr.onload = function() {
+  xhr.onload = function () {
     if (xhr.readyState == 4 && xhr.status == 200) {
       //alert(xhr.responseText);
       alert("Your Patient File has been uploaded.");
@@ -132,7 +132,7 @@ function upload(jsondataRow) {
   xhr.setRequestHeader("Content-Type", "application/json");
   //xhr.send(data);
   console.log(JSON.stringify(jsondataRow));
-  jsondataRow.$class = "org.example.basic.Patient";
+  jsondataRow.$class = "org.exioms.empty.Patient";
   console.log(JSON.stringify(jsondataRow));
   xhr.send(JSON.stringify(JSON.parse(JSON.stringify(jsondataRow))));
 }
