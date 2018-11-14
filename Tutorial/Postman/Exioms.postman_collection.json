@@ -1,0 +1,220 @@
+{
+	"info": {
+		"_postman_id": "25c3e779-217c-45cf-942c-4079fb59d23d",
+		"name": "Exioms",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Adding New Patient to the Blockchain",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "  {\r\n    \"$class\": \"org.exioms.empty.Patient\",\r\n    \"PatientId\": \"1337\",\r\n    \"Pname\": \"Shubham Koli\",\r\n    \"Email\": \"shubham@anc.com\",\r\n    \"Contact\": \"akash\",\r\n    \"Number\": \"8421999884\",\r\n    \"Address\": \"solapur\"\r\n  }"
+				},
+				"url": {
+					"raw": "localhost:4000/newpatient",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"newpatient"
+					]
+				},
+				"description": "You will need to input all the fields to insert patient. ALL FIELDS ARE MENDOTORY\n\nSample:- \n\n  {\n    \"$class\": \"org.exioms.empty.Patient\",\n    \"PatientId\": \"1337\",\n    \"Pname\": \"Shubham Koli\",\n    \"Email\": \"shubham@anc.com\",\n    \"Contact\": \"akash\",\n    \"Number\": \"8421999884\",\n    \"Address\": \"solapur\"\n  }"
+			},
+			"response": []
+		},
+		{
+			"name": "Requesting Access to patient's EHR.",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"PatientId\" : \"1337\",\n\t\"Hospital_ID\" : \"Apollo\",\n\t\"Staff_ID\" : \"Dr. Koli\"\n}"
+				},
+				"url": {
+					"raw": "localhost:4000/request",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"request"
+					]
+				},
+				"description": "this api creates the request for patients EHR.\nALL FIELDS ARE MENDOTORY\n{\n\t\"PatientId\" : \"1337\",\n\t\"Hospital_ID\" : \"Apollo\",\n\t\"Staff_ID\" : \"Dr. Koli\"\n}"
+			},
+			"response": []
+		},
+		{
+			"name": "Granting Access to patient's EHR.",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"PatientId\" : \"1337\",\n\t\"Hospital_ID\" : \"Apollo\",\n\t\"Staff_ID\" : \"Dr. Koli\"\n}"
+				},
+				"url": {
+					"raw": "localhost:4000/grant",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"grant"
+					]
+				},
+				"description": "this api grants acesss for patients EHR.\nALL FIELDS ARE MENDOTORY\n\nsample:- \n{\n\t\"PatientId\" : \"1337\",\n\t\"Hospital_ID\" : \"Apollo\",\n\t\"Staff_ID\" : \"Dr. Koli\"\n}"
+			},
+			"response": []
+		},
+		{
+			"name": "Inserting new treatment details into Blockchain",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n            \n            \"HospitalName\": \"Apollo\",\n            \"StaffId\": \"Doctor\",\n            \"PinCode\": \"413001\",\n            \"ChronicDisease\": \"Heart Condition\",\n            \"Disease\": \"Malaria\",\n            \"DiseaseType\": \"Infectious\",\n            \"DiseaseCategory\": \"vector-born\",\n            \"DiseaseSubCategory\": \"Plasmodium\",\n            \"symptom\": \"Night Shivering\",\n            \"allergies\": \"NA\",\n            \"Flag\": \"NA\",\n            \"weight\": \"80\",\n            \"AlcoholConsumption\": \"N\",\n            \"SmokingHabits\": \"Y\",\n            \"medicines\": \"Malarium\",\n            \"tests\": \"Blood Tests\",\n            \"patientData\": \"resource:org.exioms.empty.PatientData#1337\"\n        }"
+				},
+				"url": {
+					"raw": "localhost:4000/newtreatment",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"newtreatment"
+					]
+				},
+				"description": "This API inserts treatment details to patient's EHR. \n\nsample:-\n{\n            \n            \"HospitalName\": \"Apollo\",\n            \"StaffId\": \"Doctor\",\n            \"PinCode\": \"413001\",\n            \"ChronicDisease\": \"Heart Condition\",\n            \"Disease\": \"Malaria\",\n            \"DiseaseType\": \"Infectious\",\n            \"DiseaseCategory\": \"vector-born\",\n            \"DiseaseSubCategory\": \"Plasmodium\",\n            \"symptom\": \"Night Shivering\",\n            \"allergies\": \"NA\",\n            \"Flag\": \"NA\",\n            \"weight\": \"80\",\n            \"AlcoholConsumption\": \"N\",\n            \"SmokingHabits\": \"Y\",\n            \"medicines\": \"Malarium\",\n            \"tests\": \"Blood Tests\",\n            \"patientData\": \"resource:org.exioms.empty.PatientData#1337\"\n        }"
+			},
+			"response": []
+		},
+		{
+			"name": "Retriving the patient Details  from blockchain",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"PatientId\" : \"1337\",\n\t\"Hospital_ID\" : \"Apollo\"\n}"
+				},
+				"url": {
+					"raw": "localhost:4000/getpatient",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"getpatient"
+					]
+				},
+				"description": "This API retrives the patients Master details from blockchain. Master details and Transaction details of patient of patient are kept separatly.\n\nsample:- \n{\n\t\"PatientId\" : \"1337\",\n\t\"Hospital_ID\" : \"Apollo\"\n}"
+			},
+			"response": []
+		},
+		{
+			"name": "Retriving the Previous Medical History  of Patient",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"PatientId\" : \"1337\",\n\t\"Hospital_ID\" : \"Apollo\"\n}\n"
+				},
+				"url": {
+					"raw": "http://localhost:4000/treatment",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"treatment"
+					]
+				},
+				"description": "You will need to send Patient Id and Hospital Id or DoctorId.\n\nsample request:- \n{\n\t\"PatientId\" : \"1337\",\n\t\"Hospital_ID\" : \"Apollo\"\n}\n"
+			},
+			"response": []
+		},
+		{
+			"name": "This API route gives the list of patient for given Hospital id",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"Hospital_ID\" : \"Apollo\"\n}"
+				},
+				"url": {
+					"raw": "localhost:4000/patientlist",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"patientlist"
+					]
+				},
+				"description": "sample:- \n{\n\t\"Hospital_ID\" : \"Apollo\"\n}"
+			},
+			"response": []
+		}
+	]
+}
